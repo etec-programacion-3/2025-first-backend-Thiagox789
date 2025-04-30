@@ -6,6 +6,7 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
+    # Inicializar la base de datos con la app
     db.init_app(app)
 
     @app.route("/")
