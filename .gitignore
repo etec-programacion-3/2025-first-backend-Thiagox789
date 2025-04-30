@@ -1,28 +1,11 @@
-# Entorno virtual
-venv/
-ENV/
-env/
-.venv/
-
-# Archivos temporales
+# Python
 *.pyc
-__pycache__/
+*.pyo
+__pycache__
 
-# Base de datos SQLite (opcional si la vas a versionar o no)
-*.sqlite3
+# Entornos virtuales
+venv/
+.env/
+
+# Archivos de bases de datos SQLite
 *.db
-
-# Archivos de configuración locales
-*.env
-
-# VSCode
-.vscode/
-
-# PyCharm
-.idea/
-
-# Archivos de logs
-*.log
-
-# MacOS
-.DS_Store
