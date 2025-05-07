@@ -44,12 +44,12 @@ def get_libro(id):
 @libros_bp.route("/", methods=["POST"])
 def crear_libro():
     data = request.get_json()
-
+    
     # Validar datos
     error, status_code = validar_datos(data)
     if error:
         return jsonify({"error": error}), status_code
-
+    
     nuevo_libro = Libro(
         titulo=data["titulo"],
         autor=data["autor"],
@@ -75,6 +75,7 @@ def actualizar_libro(id):
     libro.autor = data.get("autor", libro.autor)
     libro.categoria = data.get("categoria", libro.categoria)
     libro.estado = data.get("estado", libro.estado)
+    
     db.session.commit()
     return jsonify({"mensaje": "Libro actualizado correctamente"})
 
@@ -85,3 +86,29 @@ def eliminar_libro(id):
     db.session.delete(libro)
     db.session.commit()
     return jsonify({"mensaje": "Libro eliminado correctamente"})
+
+# GET /libros/buscar - Buscar libros por título
+@libros_bp.route("/buscar", methods=["GET"])
+def buscar_libros():
+    # Obtener el parámetro 'titulo' de la query string
+    titulo = request.args.get('titulo', None)
+    
+    # Si no se pasa un título, devolver un error
+    if not titulo:
+        return jsonify({"error": "El parámetro 'titulo' es obligatorio para la búsqueda."}), 400
+    
+    # Realizar la búsqueda de libros cuyo título contenga el término buscado
+    libros = Libro.query.filter(Libro.titulo.ilike(f"%{titulo}%")).all()
+    
+    # Si no se encuentran libros, devolver un mensaje adecuado
+    if not libros:
+        return jsonify({"mensaje": "No se encontraron libros con el título proporcionado."}), 404
+    
+    # Devolver los libros encontrados
+    return jsonify([{
+        "id": libro.id,
+        "titulo": libro.titulo,
+        "autor": libro.autor,
+        "categoria": libro.categoria,
+        "estado": libro.estado
+    } for libro in libros])
