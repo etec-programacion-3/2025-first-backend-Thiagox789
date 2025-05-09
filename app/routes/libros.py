@@ -87,22 +87,33 @@ def eliminar_libro(id):
     db.session.commit()
     return jsonify({"mensaje": "Libro eliminado correctamente"})
 
-# GET /libros/buscar - Buscar libros por título
+# GET /libros/buscar - Buscar libros por título y/o categoría
 @libros_bp.route("/buscar", methods=["GET"])
 def buscar_libros():
-    # Obtener el parámetro 'titulo' de la query string
+    # Obtener parámetros de búsqueda
     titulo = request.args.get('titulo', None)
+    categoria = request.args.get('categoria', None)
     
-    # Si no se pasa un título, devolver un error
-    if not titulo:
-        return jsonify({"error": "El parámetro 'titulo' es obligatorio para la búsqueda."}), 400
+    # Iniciar la consulta base
+    query = Libro.query
     
-    # Realizar la búsqueda de libros cuyo título contenga el término buscado
-    libros = Libro.query.filter(Libro.titulo.ilike(f"%{titulo}%")).all()
+    # Aplicar filtros si se proporcionan parámetros
+    if titulo:
+        query = query.filter(Libro.titulo.ilike(f"%{titulo}%"))
+    
+    if categoria:
+        query = query.filter(Libro.categoria.ilike(f"%{categoria}%"))
+    
+    # Verificar si se proporcionó al menos un parámetro de búsqueda
+    if not titulo and not categoria:
+        return jsonify({"error": "Debe proporcionar al menos un parámetro de búsqueda (titulo o categoria)."}), 400
+    
+    # Ejecutar la consulta
+    libros = query.all()
     
     # Si no se encuentran libros, devolver un mensaje adecuado
     if not libros:
-        return jsonify({"mensaje": "No se encontraron libros con el título proporcionado."}), 404
+        return jsonify({"mensaje": "No se encontraron libros con los criterios de búsqueda proporcionados."}), 404
     
     # Devolver los libros encontrados
     return jsonify([{
