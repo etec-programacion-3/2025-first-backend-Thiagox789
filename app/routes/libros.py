@@ -87,12 +87,25 @@ def eliminar_libro(id):
     db.session.commit()
     return jsonify({"mensaje": "Libro eliminado correctamente"})
 
-# GET /libros/buscar - Buscar libros por título y/o categoría
+# GET /libros/buscar - Buscar libros con filtrado y ordenamiento
 @libros_bp.route("/buscar", methods=["GET"])
 def buscar_libros():
     # Obtener parámetros de búsqueda
     titulo = request.args.get('titulo', None)
     categoria = request.args.get('categoria', None)
+    
+    # Parámetros de ordenamiento
+    orden_campo = request.args.get('orden_campo', 'titulo')  # Campo por el que ordenar (default: titulo)
+    orden_direccion = request.args.get('orden_direccion', 'asc')  # Dirección: asc o desc (default: asc)
+    
+    # Validar campo de ordenamiento
+    campos_validos = ['titulo', 'autor', 'categoria']
+    if orden_campo not in campos_validos:
+        return jsonify({"error": f"Campo de ordenamiento no válido. Opciones válidas: {', '.join(campos_validos)}"}), 400
+    
+    # Validar dirección de ordenamiento
+    if orden_direccion not in ['asc', 'desc']:
+        return jsonify({"error": "Dirección de ordenamiento no válida. Use 'asc' o 'desc'."}), 400
     
     # Iniciar la consulta base
     query = Libro.query
@@ -107,6 +120,13 @@ def buscar_libros():
     # Verificar si se proporcionó al menos un parámetro de búsqueda
     if not titulo and not categoria:
         return jsonify({"error": "Debe proporcionar al menos un parámetro de búsqueda (titulo o categoria)."}), 400
+    
+    # Aplicar ordenamiento
+    campo_ordenamiento = getattr(Libro, orden_campo)
+    if orden_direccion == 'desc':
+        query = query.order_by(campo_ordenamiento.desc())
+    else:
+        query = query.order_by(campo_ordenamiento.asc())
     
     # Ejecutar la consulta
     libros = query.all()
