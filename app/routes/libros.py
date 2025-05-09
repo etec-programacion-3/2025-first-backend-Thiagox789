@@ -44,7 +44,6 @@ def get_libro(id):
 @libros_bp.route("/", methods=["POST"])
 def crear_libro():
     data = request.get_json()
-    
     # Validar datos
     error, status_code = validar_datos(data)
     if error:
@@ -65,17 +64,15 @@ def crear_libro():
 def actualizar_libro(id):
     libro = Libro.query.get_or_404(id)
     data = request.get_json()
-
     # Validar datos
     error, status_code = validar_datos(data)
     if error:
         return jsonify({"error": error}), status_code
-
+    
     libro.titulo = data.get("titulo", libro.titulo)
     libro.autor = data.get("autor", libro.autor)
     libro.categoria = data.get("categoria", libro.categoria)
     libro.estado = data.get("estado", libro.estado)
-    
     db.session.commit()
     return jsonify({"mensaje": "Libro actualizado correctamente"})
 
@@ -87,7 +84,7 @@ def eliminar_libro(id):
     db.session.commit()
     return jsonify({"mensaje": "Libro eliminado correctamente"})
 
-# GET /libros/buscar - Buscar libros con filtrado y ordenamiento
+# GET /libros/buscar - Buscar libros con filtrado, ordenamiento y paginación
 @libros_bp.route("/buscar", methods=["GET"])
 def buscar_libros():
     # Obtener parámetros de búsqueda
@@ -97,6 +94,17 @@ def buscar_libros():
     # Parámetros de ordenamiento
     orden_campo = request.args.get('orden_campo', 'titulo')  # Campo por el que ordenar (default: titulo)
     orden_direccion = request.args.get('orden_direccion', 'asc')  # Dirección: asc o desc (default: asc)
+    
+    # Parámetros de paginación
+    pagina = request.args.get('pagina', 1, type=int)  # Número de página (default: 1)
+    por_pagina = request.args.get('por_pagina', 10, type=int)  # Resultados por página (default: 10)
+    
+    # Validar parámetros de paginación
+    if pagina < 1:
+        return jsonify({"error": "El número de página debe ser mayor o igual a 1"}), 400
+    
+    if por_pagina < 1 or por_pagina > 100:
+        return jsonify({"error": "El número de resultados por página debe estar entre 1 y 100"}), 400
     
     # Validar campo de ordenamiento
     campos_validos = ['titulo', 'autor', 'categoria']
@@ -128,18 +136,36 @@ def buscar_libros():
     else:
         query = query.order_by(campo_ordenamiento.asc())
     
-    # Ejecutar la consulta
-    libros = query.all()
+    # Aplicar paginación
+    total_resultados = query.count()
+    total_paginas = (total_resultados + por_pagina - 1) // por_pagina  # Ceil division
+    
+    # Ajustar página si excede el total
+    if pagina > total_paginas and total_paginas > 0:
+        pagina = total_paginas
+    
+    # Obtener los resultados paginados
+    libros = query.offset((pagina - 1) * por_pagina).limit(por_pagina).all()
     
     # Si no se encuentran libros, devolver un mensaje adecuado
     if not libros:
         return jsonify({"mensaje": "No se encontraron libros con los criterios de búsqueda proporcionados."}), 404
     
-    # Devolver los libros encontrados
-    return jsonify([{
-        "id": libro.id,
-        "titulo": libro.titulo,
-        "autor": libro.autor,
-        "categoria": libro.categoria,
-        "estado": libro.estado
-    } for libro in libros])
+    # Crear respuesta con metadatos de paginación
+    respuesta = {
+        "libros": [{
+            "id": libro.id,
+            "titulo": libro.titulo,
+            "autor": libro.autor,
+            "categoria": libro.categoria,
+            "estado": libro.estado
+        } for libro in libros],
+        "paginacion": {
+            "pagina_actual": pagina,
+            "total_paginas": total_paginas,
+            "resultados_por_pagina": por_pagina,
+            "total_resultados": total_resultados
+        }
+    }
+    
+    return jsonify(respuesta)
