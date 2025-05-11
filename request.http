@@ -1,0 +1,110 @@
+# Archivo requests.http para probar la API de Gestión de Biblioteca
+# Este archivo se puede utilizar con la extensión REST Client de VS Code
+# ------------------------------------------------------------------------------
+
+### Variables globales (cambiar la URL base según sea necesario)
+@baseUrl = http://localhost:5000
+
+### 1. Verificar que la API esté funcionando
+GET {{baseUrl}}/
+# Debería devolver un mensaje confirmando que la API está funcionando
+
+### 2. OPERACIONES CRUD BÁSICAS DE LIBROS
+# ------------------------------------------------------------------------------
+
+### 2.1 Obtener todos los libros
+GET {{baseUrl}}/libros/
+
+### 2.2 Crear un nuevo libro
+POST {{baseUrl}}/libros/
+Content-Type: application/json
+
+{
+  "titulo": "Cien años de soledad",
+  "autor": "Gabriel García Márquez",
+  "categoria": "Novela",
+  "estado": "disponible"
+}
+
+### 2.3 Crear otro libro para pruebas
+POST {{baseUrl}}/libros/
+Content-Type: application/json
+
+{
+  "titulo": "El amor en los tiempos del cólera",
+  "autor": "Gabriel García Márquez",
+  "categoria": "Novela",
+  "estado": "disponible"
+}
+
+### 2.4 Crear un libro de otra categoría
+POST {{baseUrl}}/libros/
+Content-Type: application/json
+
+{
+  "titulo": "El principito",
+  "autor": "Antoine de Saint-Exupéry",
+  "categoria": "Infantil",
+  "estado": "disponible"
+}
+
+### 2.5 Crear un libro más para las pruebas
+POST {{baseUrl}}/libros/
+Content-Type: application/json
+
+{
+  "titulo": "Harry Potter y la piedra filosofal",
+  "autor": "J.K. Rowling",
+  "categoria": "Fantasía",
+  "estado": "disponible"
+}
+
+### 2.6 Obtener un libro específico por ID (reemplazar {id} con un ID válido)
+GET {{baseUrl}}/libros/1
+
+### 2.7 Actualizar un libro específico (reemplazar {id} con un ID válido)
+PUT {{baseUrl}}/libros/1
+Content-Type: application/json
+
+{
+  "titulo": "Cien años de soledad (Edición especial)",
+  "autor": "Gabriel García Márquez",
+  "categoria": "Novela",
+  "estado": "prestado"
+}
+
+### 2.8 Eliminar un libro (reemplazar {id} con un ID válido)
+DELETE {{baseUrl}}/libros/4
+
+### 3. PRUEBAS DE BÚSQUEDA CON FILTRADO, ORDENAMIENTO Y PAGINACIÓN
+# ------------------------------------------------------------------------------
+
+### 3.1 Buscar libros por título
+GET {{baseUrl}}/libros/buscar?titulo=soledad
+
+### 3.2 Buscar libros por categoría
+GET {{baseUrl}}/libros/buscar?categoria=Novela
+
+### 3.3 Buscar libros combinando título y categoría
+GET {{baseUrl}}/libros/buscar?titulo=amor&categoria=Novela
+
+### 3.4 Búsqueda con ordenamiento por título ascendente (default)
+GET {{baseUrl}}/libros/buscar?categoria=Novela&orden_campo=titulo&orden_direccion=asc
+
+### 3.5 Búsqueda con ordenamiento por autor descendente
+GET {{baseUrl}}/libros/buscar?categoria=Novela&orden_campo=autor&orden_direccion=desc
+
+### 3.6 Búsqueda con paginación (página 1, 2 resultados por página)
+GET {{baseUrl}}/libros/buscar?categoria=Novela&pagina=1&por_pagina=2
+
+### 3.7 Búsqueda con paginación y ordenamiento combinados
+GET {{baseUrl}}/libros/buscar?categoria=Novela&orden_campo=titulo&orden_direccion=asc&pagina=1&por_pagina=2
+
+### 3.8 Prueba con parámetros inválidos para verificar manejo de errores
+GET {{baseUrl}}/libros/buscar?orden_campo=invalido
+
+### 3.9 Prueba con página inválida para verificar manejo de errores
+GET {{baseUrl}}/libros/buscar?titulo=amor&pagina=-1
+
+### 3.10 Prueba sin parámetros de búsqueda (debería devolver error)
+GET {{baseUrl}}/libros/buscar
