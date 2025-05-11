@@ -3,20 +3,20 @@
 
 ## 🧩 Resumen de Implementación – Fase 1
 
-En esta primera fase del proyecto se desarrolló un sistema básico para la gestión de libros de una biblioteca escolar, utilizando **Python**, **Flask** y **SQLAlchemy**, con **SQLite** como base de datos. El sistema expone una **API REST** con funcionalidades completas para la gestión de libros, incluyendo CRUD, filtrado, ordenamiento y paginación.
+En esta fase del proyecto se desarrolló un sistema básico para la gestión de libros, utilizando **Python**, **Flask** y  con el ORM **SQLAlchemy**, acompañado con **SQLite** como base de datos. El sistema ofrece una API REST para gestionar libros, con funciones de registro, búsqueda, ordenamiento y paginación.
 
 ---
 
-## ✅ Milestones completados (con Issues)
+## ✅ Milestones completados con sus respectivas issues.
 
 ### 1. Configuración Inicial
-- Se configuró la estructura del proyecto dividiendo el código en archivos y carpetas según su responsabilidad.
+- Se configuró la estructura del proyecto dividiendo el código en archivos y carpetas según su sus tareas.
 - Se estableció la conexión a la base de datos SQLite usando SQLAlchemy.
 - Se creó el modelo de datos para los libros.
 
 ### 2. CRUD Básico
-- Implementación de los endpoints para operaciones CRUD sobre libros.
-- Validación de datos en las operaciones de creación y actualización.
+- se implementaron los endpoints para los libros.
+- Implemento la validacion de datos.
 - Documentación de los endpoints implementados.
 
 ### 3. Búsqueda y Filtrado
@@ -39,6 +39,13 @@ En esta primera fase del proyecto se desarrolló un sistema básico para la gest
 /instance
   ├── biblioteca.db         # Base de datos
 
+/Docs
+  ├── documentacion_biblioteca_Fase1.md  #Documentacion general Fase uno.
+  ├──documentacion_endpoints_libros.md   #Documentacion especifica para endpoints.
+
+Paso_Paso.txt             # paso a paso para inicializar el entoro, descargar las bibliotecas y como correr la API Rest.
+request.http              # Ejecutar prubeas manuales.
+requirements.txt          # todas las dependencias necesarias para el proyecto. 
 run.py                    # Punto de entrada del sistema
 ```
 
