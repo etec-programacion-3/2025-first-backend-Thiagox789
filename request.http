@@ -1,6 +1,4 @@
 # Archivo requests.http para probar la API de Gestión de Biblioteca
-# Este archivo se puede utilizar con la extensión REST Client de VS Code
-# ------------------------------------------------------------------------------
 
 ### Variables globales (cambiar la URL base según sea necesario)
 @baseUrl = http://localhost:5000
