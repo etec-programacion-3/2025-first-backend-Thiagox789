@@ -2,3 +2,6 @@
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+
+---Iniciar el API REST--
+python3 run.py
