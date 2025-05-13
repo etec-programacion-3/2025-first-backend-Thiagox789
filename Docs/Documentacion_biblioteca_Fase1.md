@@ -40,12 +40,13 @@ En esta fase del proyecto se desarrolló un sistema básico para la gestión de 
   ├── biblioteca.db         # Base de datos
 
 /Docs
-  ├── documentacion_biblioteca_Fase1.md  #Documentacion general Fase uno.
-  ├──documentacion_endpoints_libros.md   #Documentacion especifica para endpoints.
+  ├──Documentacion_biblioteca_Fase1.md  #Documentacion general Fase uno.
+  ├──Documentacion_endpoints_libros.md   #Documentacion especifica para endpoints.
 
 Paso_Paso.txt             # paso a paso para inicializar el entoro, descargar las bibliotecas y como correr la API Rest.
 request.http              # Ejecutar prubeas manuales.
 requirements.txt          # todas las dependencias necesarias para el proyecto. 
+.gitignore                # Archivos que no tienen que subirse
 run.py                    # Punto de entrada del sistema
 ```
 

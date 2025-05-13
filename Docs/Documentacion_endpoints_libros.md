@@ -4,12 +4,12 @@
 
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
-| GET    | /libros/ | Listar todos los libros |
-| GET    | /libros/{id} | Obtener un libro específico por ID |
-| POST   | /libros/ | Crear un nuevo libro |
-| PUT    | /libros/{id} | Actualizar un libro existente |
-| DELETE | /libros/{id} | Eliminar un libro |
-| GET    | /libros/buscar | Buscar libros con filtros |
+| GET    | /libros/ | Lista todos los libros |
+| GET    | /libros/{id} | Obtiene un libro específico por ID |
+| POST   | /libros/ | Crea un nuevo libro |
+| PUT    | /libros/{id} | Actualiza un libro existente |
+| DELETE | /libros/{id} | Elimina un libro |
+| GET    | /libros/buscar | Busca libros con filtros |
 
 ## Detalles de los Endpoints
 
@@ -107,12 +107,12 @@ Busca libros con filtros, ordenamiento y paginación.
 
 | Parámetro | Tipo | Descripción | Obligatorio |
 |-----------|------|-------------|-------------|
-| titulo | string | Filtrar por título (coincidencia parcial) | Se requiere al menos uno: título o categoría |
-| categoria | string | Filtrar por categoría (coincidencia parcial) | Se requiere al menos uno: título o categoría |
+| titulo | string | Filtra por título (coincidencia parcial) | Se requiere al menos uno: título o categoría |
+| categoria | string | Filtra por categoría (coincidencia parcial) | Se requiere al menos uno: título o categoría |
 | orden_campo | string | Campo por el cual ordenar (titulo, autor, categoria) | No (default: titulo) |
 | orden_direccion | string | Dirección del ordenamiento (asc, desc) | No (default: asc) |
-| pagina | integer | Número de página a mostrar | No (default: 1) |
-| por_pagina | integer | Cantidad de resultados por página (1-100) | No (default: 10) |
+| pagina | int | Número de página a mostrar | No (default: 1) |
+| por_pagina | int | Cantidad de resultados por página (1-100) | No (default: 10) |
 
 **Ejemplo de solicitud:**
 ```
@@ -151,10 +151,10 @@ GET /libros/buscar?categoria=Novela&orden_campo=autor&orden_direccion=desc&pagin
 
 | Código | Descripción |
 |--------|-------------|
-| 200 | Éxito |
+| 200 | OK |
 | 201 | Recurso creado exitosamente |
 | 400 | Solicitud incorrecta (ej: parámetros inválidos) |
-| 404 | Recurso no encontrado |
+| 404 | Recurso no encontrado :( |
 | 500 | Error interno del servidor |
 
 ## Validación de Datos
