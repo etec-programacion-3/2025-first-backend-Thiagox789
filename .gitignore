@@ -1,0 +1,11 @@
+# Python
+*.pyc
+*.pyo
+__pycache__
+
+# Entornos virtuales
+venv/
+.env/
+
+# Archivos de bases de datos SQLite
+*.db
